@@ -21,7 +21,7 @@ function setup() {
 
 function mouseClicked() {
   for (i = 0; i < 40; i++) {
-    if (flock.length > 1000)
+    if (flock.length > 300)
       flock.shift();
     flock.push(new Bird(createVector(mouseX, mouseY)))
   }
