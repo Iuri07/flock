@@ -1,5 +1,5 @@
 class Node {
-  constructor(x, y, w, h){
+  constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -8,24 +8,24 @@ class Node {
     this.c = color(255);
   }
 
-  glow(){
-    this.c = color(0,255,0);
+  glow() {
+    this.c = color(0, 255, 0);
   }
 
-  intersects(circle){
-    if(circle.pos.x + circle.radius > this.x &&
+  intersects(circle) {
+    if (circle.pos.x + circle.radius > this.x &&
       circle.pos.y + circle.radius > this.y &&
       circle.pos.x - circle.radius < this.x + this.w &&
       circle.pos.y - circle.radius < this.y + this.h)
-        return true;
+      return true;
     return false;
   }
 
   query(range, found) {
-    if (!this.intersects(range)){
+    if (!this.intersects(range)) {
       return;
     } else {
-      for (let p of this.birds){
+      for (let p of this.birds) {
         if (range.contains(p))
           found.push(p);
       }
@@ -33,7 +33,7 @@ class Node {
     return;
   }
 
-  show(){
+  show() {
     stroke(this.c);
     strokeWeight(1);
     noFill();

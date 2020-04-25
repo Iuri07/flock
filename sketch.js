@@ -1,6 +1,6 @@
 var grid_w;
 var grid_h;
-var scl = 22;
+var scl = 50;
 var nodes = [];
 var flock = [];
 
@@ -14,16 +14,16 @@ function setup() {
     }
   }
 
-  for (i = 0; i < 300; i++) {
+  for (i = 0; i < 3000; i++) {
     flock.push(new Bird())
   }
 }
 
-function mouseClicked(){
+function mouseClicked() {
   for (i = 0; i < 40; i++) {
-    if(flock.length > 1000)
+    if (flock.length > 1000)
       flock.shift();
-    flock.push(new Bird(createVector(mouseX,mouseY)))
+    flock.push(new Bird(createVector(mouseX, mouseY)))
   }
 }
 
