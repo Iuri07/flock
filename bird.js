@@ -1,5 +1,5 @@
 function get_uni_pos(x, y) {
-  return x * (scl) + y;
+  return x * (scl ) + y;
 }
 
 class Range {
@@ -23,7 +23,7 @@ class Bird {
     this.pos = pos || createVector(random(width), random(height));
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2, 4));
-    this.acceleration = createVector(0, 0);
+    this.acceleration = createVector(0,0);
     this.diameter = 100;
     this.maxSpeed = 4;
     this.maxForce = .2;
@@ -69,47 +69,50 @@ class Bird {
   }
 
   align(factor) {
-    let avg_velocity = createVector(0, 0);
-    let acc = createVector(0, 0);
+    let avg_velocity = createVector(0,0);
+    let acc = createVector(0,0);
 
     avg_velocity.add(this.velocity)
-    for (let bird of this.local_flock) {
+    for(let bird of this.local_flock){
       avg_velocity.add(bird.velocity);
     }
     avg_velocity.div(this.local_flock.length);
     acc.add(avg_velocity);
+    acc.setMag(this.maxSpeed);
     acc.sub(this.velocity);
     acc.limit(this.maxForce);
     this.acceleration.add(acc.mult(factor));
   }
 
   cohesion(factor) {
-    let avg_pos = createVector(0, 0);
-    let acc = createVector(0, 0);
+    let avg_pos = createVector(0,0);
+    let acc = createVector(0,0);
 
-    for (let bird of this.local_flock) {
-      if (bird != this)
+    for(let bird of this.local_flock){
+      if(bird != this)
         avg_pos.add(bird.pos);
     }
-    avg_pos.div(this.local_flock.length - 1);
+    avg_pos.div(this.local_flock.length-1);
     acc.add(avg_pos);
     acc.sub(this.pos);
+    acc.setMag(this.maxSpeed);
     acc.sub(this.velocity);
     acc.limit(this.maxForce);
     this.acceleration.add(acc.mult(factor));
   }
 
   separate(factor) {
-    if (this.local_flock.length > this.crowd) {
-      let acc = createVector(0, 0);
-      for (let bird of this.local_flock) {
-        if (bird != this) {
+    if(this.local_flock.length > this.crowd){
+      let acc = createVector(0,0);
+      for(let bird of this.local_flock){
+        if(bird != this){
           let diff = p5.Vector.sub(this.pos, bird.pos);
           diff.div(pow(dist(this.pos.x, this.pos.y, bird.pos.x, bird.pos.y), 2));
           acc.add(diff);
         }
       }
-      acc.div(this.local_flock.length - 1);
+      acc.div(this.local_flock.length-1);
+      acc.setMag(this.maxSpeed);
       acc.sub(this.velocity);
       acc.limit(this.maxForce);
       this.acceleration.add(acc.mult(factor));
@@ -124,11 +127,11 @@ class Bird {
     if (this.pos.y < 0) this.pos.y = height;
   }
 
-  flock() {
+  flock(){
     let a_factor = 1;
     let c_factor = 1;
     let s_factor = 1.2;
-    if (this.local_flock.length > 1) {
+    if(this.local_flock.length > 1){
       this.align(a_factor);
       this.cohesion(c_factor);
       this.separate(s_factor);
@@ -153,16 +156,16 @@ class Bird {
     let dir = this.velocity.copy();
     dir.setMag(10);
     let b = dir.copy().add(this.pos);
-    dir.rotate(5 * PI / 6);
+    dir.rotate(5*PI/6);
     let a = dir.copy().add(this.pos);
-    dir.rotate(PI / 3);
+    dir.rotate(PI/3);
     let c = dir.copy().add(this.pos);
-    if (this.node)
+    if(this.node)
       this.node.glow()
     noFill();
     stroke(this.c);
     strokeWeight(2);
-    triangle(a.x, a.y, b.x, b.y, c.x, c.y);
+    triangle(a.x,a.y,b.x,b.y,c.x,c.y);
   }
 
 }
