@@ -14,7 +14,7 @@ function setup() {
     }
   }
 
-  for (i = 0; i < 3000; i++) {
+  for (i = 0; i < 300; i++) {
     flock.push(new Bird())
   }
 }
