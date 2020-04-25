@@ -1,12 +1,10 @@
-
-
 class Node {
   constructor(x, y, w, h){
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.points = [];
+    this.birds = [];
     this.c = color(255);
   }
 
@@ -15,10 +13,10 @@ class Node {
   }
 
   intersects(circle){
-    if(circle.x + circle.r > this.x &&
-      circle.y + circle.r > this.y &&
-      circle.x - circle.r < this.x + this.w &&
-      circle.y - circle.r < this.y + this.h)
+    if(circle.pos.x + circle.radius > this.x &&
+      circle.pos.y + circle.radius > this.y &&
+      circle.pos.x - circle.radius < this.x + this.w &&
+      circle.pos.y - circle.radius < this.y + this.h)
         return true;
     return false;
   }
@@ -27,7 +25,7 @@ class Node {
     if (!this.intersects(range)){
       return;
     } else {
-      for (let p of this.points){
+      for (let p of this.birds){
         if (range.contains(p))
           found.push(p);
       }
@@ -40,11 +38,6 @@ class Node {
     strokeWeight(1);
     noFill();
     rect(this.x, this.y, this.w, this.h);
-
-    for (let p of this.points) {
-      strokeWeight(2);
-      point(p.x, p.y);
-    }
     this.c = color(255)
   }
 }
