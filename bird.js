@@ -127,8 +127,6 @@ class Bird {
 
   follow(goal_pos, factor){
     let diff = p5.Vector.sub(goal_pos, this.pos);
-    // diff.div(pow(dist(this.pos.x, this.pos.y, bird.pos.x, bird.pos.y), 2));
-    // acc.add(diff);
 
     diff.setMag(this.maxSpeed);
     diff.sub(this.velocity);

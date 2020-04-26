@@ -3,9 +3,10 @@ var grid_h;
 var scl = 25;
 var nodes = [];
 var flock = [];
-let starting_birds = 300;
-let bird_limit = 1000;
+let initial_flock = 300;
+let flock_limit = 1000;
 let player;
+let debug = false;
 
 document.addEventListener("contextmenu", function(e){
     e.preventDefault();
@@ -22,26 +23,34 @@ function setup() {
     }
   }
 
-  for (i = 0; i < starting_birds; i++) {
+  for (i = 0; i < initial_flock; i++) {
     flock.push(new Bird())
   }
 }
 
 function mouseClicked() {
   for (i = 0; i < 40; i++) {
-    if (flock.length > bird_limit)
+    if (flock.length > flock_limit)
       flock.shift();
     flock.push(new Bird(createVector(mouseX, mouseY)))
   }
 
 }
 
+function keyPressed(){
+  if(key === 'd'){
+    debug = !debug;
+  }
+}
+
 function draw() {
   background(30);
 
-  // for(let n of nodes){
-  //   n.show();
-  // }
+  if(debug){
+    for(let n of nodes){
+      n.show();
+    }
+  }
 
   for (let bird of flock) {
     bird.show();
@@ -50,21 +59,23 @@ function draw() {
     if(mouseIsPressed){
       if(mouseButton === RIGHT) {
         player.update();
-        bird.follow(createVector(mouseX, mouseY), 0.4)
+        bird.follow(player.pos, 0.4)
       }
     }
   }
 
 }
 
-function windowResized() {
+window.onresize = function() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
+  grid_w = window.innerWidth / scl;
+  grid_h = window.innerHeight / scl;
+  console.log(width, height)
   nodes = [];
-  resizeCanvas(windowWidth, windowHeight);
-  grid_w = width / scl;
-  grid_h = height / scl;
-  for (x = 0; x < width / grid_w; x++) {
-    for (y = 0; y < height / grid_h; y++) {
+  for (x = 0; x < ceil(width / grid_w); x++) {
+    for (y = 0; y < ceil(height / grid_h); y++) {
       nodes.push(new Node(x * grid_w, y * grid_h, grid_w, grid_h));
     }
   }
+
 }
