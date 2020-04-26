@@ -1,5 +1,5 @@
 function get_uni_pos(x, y) {
-  return x * (scl+1) + y;
+  return x * (scl) + y;
 }
 
 class Range {
@@ -10,7 +10,7 @@ class Range {
 
   intersects(circle){
     return(
-      dist(this.pos, circle.pos) - circle.radius <= this.radius 
+      dist(this.pos, circle.pos) - circle.radius <= this.radius
     );
   }
 
