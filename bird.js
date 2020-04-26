@@ -1,11 +1,17 @@
 function get_uni_pos(x, y) {
-  return x * (scl ) + y;
+  return x * (scl+1) + y;
 }
 
 class Range {
   constructor(pos, r) {
     this.pos = pos;
     this.radius = r / 2;
+  }
+
+  intersects(circle){
+    return(
+      dist(this.pos, circle.pos) - circle.radius <= this.radius 
+    );
   }
 
   contains(point) {
@@ -27,7 +33,7 @@ class Bird {
     this.diameter = 100;
     this.maxSpeed = 4;
     this.maxForce = .2;
-    this.crowd = 3;
+    this.crowd = 2;
 
     this.node = null;
     this.local_flock = [];
@@ -119,6 +125,16 @@ class Bird {
     }
   }
 
+  follow(goal_pos, factor){
+    let diff = p5.Vector.sub(goal_pos, this.pos);
+    // diff.div(pow(dist(this.pos.x, this.pos.y, bird.pos.x, bird.pos.y), 2));
+    // acc.add(diff);
+
+    diff.setMag(this.maxSpeed);
+    diff.sub(this.velocity);
+    diff.limit(this.maxForce);
+    this.acceleration.add(diff.mult(factor));
+  }
 
   check_border() {
     if (this.pos.x > width) this.pos.x = 0;
