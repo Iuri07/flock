@@ -15,8 +15,8 @@ class Obstacle {
 
   contains(point) {
     return (
-      abs(point.x - this.pos.x) <= this.diameter &&
-      abs(point.y - this.pos.y) <= this.diameter
+      abs(point.x - this.pos.x) <= this.diameter/2 &&
+      abs(point.y - this.pos.y) <= this.diameter/2
     );
   }
 
