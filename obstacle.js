@@ -35,15 +35,13 @@ class Obstacle {
 
     for ( x = 0; x <= maxX; x++ ) {
       for ( y = 0; y <= maxY; y++ ) {
-        let _x = ceil( this.grid_pos.x + x - maxX / 2 );
-        let _y = ceil( this.grid_pos.y + y - maxY / 2 );
+        let _x = mod(ceil( this.grid_pos.x + x - maxX / 2 ),scl);
+        let _y = mod(ceil( this.grid_pos.y + y - maxY / 2 ),scl);
         let node = nodes[ get_uni_pos( _x, _y ) ] ;
 
-        if ( _x < scl && _x >= 0 && _y < scl && _y >= 0 && node ){
-          if ( node.intersects( new Range( this.pos, this.diameter ) ) ) {
-            this.nodes.push( node );
-            node.obstacles.push(this);
-          }
+        if ( node.intersects( new Range( this.pos, this.diameter ) ) ) {
+          this.nodes.push( node );
+          node.obstacles.push(this);
         }
       }
     }

@@ -14,10 +14,24 @@ class Node {
   }
 
   intersects(circle) {
+
     if (circle.pos.x + circle.radius > this.x &&
       circle.pos.y + circle.radius > this.y &&
       circle.pos.x - circle.radius < this.x + this.w &&
       circle.pos.y - circle.radius < this.y + this.h)
+      return true;
+
+    let new_pos = createVector(circle.pos.x, circle.pos.y);
+
+    if (circle.pos.x + circle.radius > width) new_pos.x -= width;
+    if (circle.pos.x - circle.radius < 0) new_pos.x += width;
+    if (circle.pos.y + circle.radius > height) new_pos.y -= height;
+    if (circle.pos.y - circle.radius < 0) new_pos.y += height;
+
+    if (new_pos.x + circle.radius > this.x &&
+      new_pos.y + circle.radius > this.y &&
+      new_pos.x - circle.radius < this.x + this.w &&
+      new_pos.y - circle.radius < this.y + this.h)
       return true;
     return false;
   }

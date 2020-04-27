@@ -2,6 +2,10 @@ function get_uni_pos(x, y) {
   return x * (scl)  + y;
 }
 
+function mod(x, m) {
+    return (x%m + m)%m;
+}
+
 class Range {
   constructor(pos, r) {
     this.pos = pos;
@@ -64,17 +68,15 @@ class Bird {
 
     for (x = 0; x < maxX; x++) {
       for (y = 0; y <= maxY; y++) {
-        let _x = ceil(this.grid_pos.x + x - maxX / 2);
-        let _y = ceil(this.grid_pos.y + y - maxY / 2);
+        let _x = mod(ceil( this.grid_pos.x + x - maxX / 2 ),scl);
+        let _y = mod(ceil( this.grid_pos.y + y - maxY / 2 ),scl);
         let node  = nodes[get_uni_pos(_x, _y)];
 
-        if (_x < scl && _x >= 0 && _y < scl && _y >= 0 && node) {
-          if (node.intersects(this.range)) {
-            node.query(this.range, this.local_flock);
-            for(let obstacle of node.obstacles){
-              if(obstacle.intersects(this) && !this.local_obstacles.includes(obstacle))
-                this.local_obstacles.push(obstacle);
-            }
+        if (node.intersects(this.range)) {
+          node.query(this.range, this.local_flock);
+          for(let obstacle of node.obstacles){
+            if(obstacle.intersects(this) && !this.local_obstacles.includes(obstacle))
+              this.local_obstacles.push(obstacle);
           }
         }
 

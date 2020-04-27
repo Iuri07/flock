@@ -4,6 +4,7 @@ var scl = 25;
 var nodes = [];
 var flock = [];
 var obstacles = [];
+let initial_obstacles = 4;
 let initial_flock = 300;
 let flock_limit = 1000;
 let player;
@@ -27,6 +28,11 @@ function setup() {
 
   for (i = 0; i < initial_flock; i++) {
     flock.push(new Bird())
+  }
+
+  for (i = 0; i < initial_obstacles; i++) {
+    obstacles.push(new Obstacle(createVector(random(25,width-25),random(25,height-25)), 50));
+    obstacles[i].set_nodes();
   }
 }
 
