@@ -25,7 +25,7 @@ class Range {
 
 class Bird {
   constructor(pos) {
-    this.c = color(255)
+    this.c = color(0, 153, 195);
     this.pos = pos || createVector(random(width), random(height));
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2, 4));
@@ -175,7 +175,7 @@ class Bird {
     let a_factor = 1;
     let c_factor = 1;
     let s_factor = 1.2;
-    let avoid_factor = 2;
+    let avoid_factor = 3;
     if(this.local_flock.length > 1){
       this.align(a_factor);
       this.cohesion(c_factor);
@@ -207,7 +207,7 @@ class Bird {
 
   show() {
     let dir = this.velocity.copy();
-    dir.setMag(10);
+    dir.setMag(8);
     let b = dir.copy().add(this.pos);
     dir.rotate(5*PI/6);
     let a = dir.copy().add(this.pos);

@@ -11,7 +11,7 @@ class Player {
 
     for(let bird of node.birds){
       if(dist(this.pos.x, this.pos.y, bird.pos.x, bird.pos.y) < 5){
-        bird.c = color(255,0,0);
+        bird.c = color(80, 0, 195);
       }
     }
   }
