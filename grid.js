@@ -5,11 +5,12 @@ class Node {
     this.w = w;
     this.h = h;
     this.birds = [];
+    this.obstacles = [];
     this.c = color(255);
   }
 
-  glow() {
-    this.c = color(0, 255, 0);
+  glow(c) {
+    this.c = c || color(0, 255, 0);
   }
 
   intersects(circle) {

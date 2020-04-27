@@ -1,5 +1,5 @@
 function get_uni_pos(x, y) {
-  return x * (scl) + y;
+  return x * (scl)  + y;
 }
 
 class Range {
@@ -37,8 +37,9 @@ class Bird {
 
     this.node = null;
     this.local_flock = [];
+    this.local_obstacles = [];
     this.range = new Range(this.pos, this.diameter);
-    this.grid_pos = createVector(floor(this.pos.x / width * scl), floor(this.pos.y * scl / height))
+    this.grid_pos = createVector(floor(this.pos.x / width* scl) , floor(this.pos.y * scl/ height) * scl)
   }
 
   set_node() {
@@ -59,19 +60,27 @@ class Bird {
     let maxX = ceil(this.diameter / (grid_w)) + 1;
     let maxY = ceil(this.diameter / (grid_h)) + 1;
     this.local_flock = []
+    this.local_obstacles = []
 
     for (x = 0; x < maxX; x++) {
       for (y = 0; y <= maxY; y++) {
         let _x = ceil(this.grid_pos.x + x - maxX / 2);
         let _y = ceil(this.grid_pos.y + y - maxY / 2);
+        let node  = nodes[get_uni_pos(_x, _y)];
 
-        if (_x < scl && _x >= 0 && _y < scl && _y >= 0) {
-          if (nodes[get_uni_pos(_x, _y)].intersects(this.range)) {
-            nodes[get_uni_pos(_x, _y)].query(this.range, this.local_flock);
+        if (_x < scl && _x >= 0 && _y < scl && _y >= 0 && node) {
+          if (node.intersects(this.range)) {
+            node.query(this.range, this.local_flock);
+            for(let obstacle of node.obstacles){
+              if(obstacle.intersects(this) && !this.local_obstacles.includes(obstacle))
+                this.local_obstacles.push(obstacle);
+            }
           }
         }
+
       }
     }
+
   }
 
   align(factor) {
@@ -134,23 +143,53 @@ class Bird {
     this.acceleration.add(diff.mult(factor));
   }
 
-  check_border() {
-    if (this.pos.x > width) this.pos.x = 0;
-    if (this.pos.x < 0) this.pos.x = width;
-    if (this.pos.y > height) this.pos.y = 0;
-    if (this.pos.y < 0) this.pos.y = height;
+  avoid(factor){
+    let acc = createVector(0,0);
+    if(this.local_obstacles.length > 0){
+      for(let obstacle of this.local_obstacles){
+        let obs_pos = obstacle.pos.copy();
+        let r = p5.Vector.sub(this.pos, obstacle.pos).setMag(obstacle.diameter/2 + 10);
+        obs_pos.add(r);
+        let diff = p5.Vector.sub(this.pos, obs_pos);
+        let d = dist(this.pos.x, this.pos.y, obstacle.pos.x, obstacle.pos.y);
+        let angle = acos((obstacle.diameter/2)/(obstacle.diameter/2 + d));
+        pop();
+        angleMode(degrees);
+        let angle_dir = diff.angleBetween(this.velocity);
+        r.rotate(angle*(angle_dir/abs(angle_dir)));
+        push();
+
+        diff.div(pow(d, 2));
+        diff.add(r);
+        acc.add(diff);
+        acc.setMag(this.maxSpeed);
+        acc.sub(this.velocity);
+        acc.limit(this.maxForce);
+        this.acceleration.add(acc.mult(factor));
+      }
+    }
   }
+
 
   flock(){
     let a_factor = 1;
     let c_factor = 1;
     let s_factor = 1.2;
+    let avoid_factor = 2;
     if(this.local_flock.length > 1){
       this.align(a_factor);
       this.cohesion(c_factor);
       this.separate(s_factor);
     }
+    this.avoid(avoid_factor);
 
+  }
+
+  check_border() {
+    if (this.pos.x > width) this.pos.x = 0;
+    if (this.pos.x < 0) this.pos.x = width;
+    if (this.pos.y > height) this.pos.y = 0;
+    if (this.pos.y < 0) this.pos.y = height;
   }
 
   update() {
